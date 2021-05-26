@@ -39,26 +39,30 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 
-passport.use(new GitHubStrategy({
-  clientID: GITHUB_CLIENT_ID,
-  clientSecret: GITHUB_CLIENT_SECRET,
-  callbackURL: 'http://localhost:8000/auth/github/callback'
-},
-  function (accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      User.upsert({
-        userId: profile.id,
-        username: profile.username
-      }).then(() => {
-        done(null, profile);
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: GITHUB_CLIENT_ID,
+      clientSecret: GITHUB_CLIENT_SECRET,
+      callbackURL: 'http://localhost:8000/auth/github/callback',
+    },
+    function (accessToken, refreshToken, profile, done) {
+      process.nextTick(function () {
+        User.upsert({
+          userId: profile.id,
+          username: profile.username,
+        }).then(() => {
+          done(null, profile);
+        });
       });
-    });
-  }
-));
+    }
+  )
+);
 
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
+var schedulesRouter = require('./routes/schedules');
 
 var app = express();
 app.use(helmet());
@@ -73,32 +77,42 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: false, saveUninitialized: false }));
+app.use(
+  session({
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
+app.use('/schedules', schedulesRouter);
 
-app.get('/auth/github',
+app.get(
+  '/auth/github',
   passport.authenticate('github', { scope: ['user:email'] }),
-  function (req, res) {
-});
+  function (req, res) {}
+);
 
-app.get('/auth/github/callback',
+app.get(
+  '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   function (req, res) {
     res.redirect('/');
-});
+  }
+);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
