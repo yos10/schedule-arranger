@@ -15,12 +15,12 @@ router.post(
     availability = availability ? parseInt(availability) : 0;
 
     Availability.upsert({
-      scheduleId,
-      userId,
-      candidateId,
-      availability
+      scheduleId: scheduleId,
+      userId: userId,
+      candidateId: candidateId,
+      availability: availability
     }).then(() => {
-      res.json({ status: 'OK', availability });
+      res.json({ status: 'OK', availability: availability });
     });
   }
 );
