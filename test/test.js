@@ -27,7 +27,7 @@ describe('/login', () => {
     return request(app)
       .get('/login')
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(/<a href="\/auth\/github"/)
+      .expect(/<a class="btn btn-info my-3" href="\/auth\/github"/)
       .expect(200);
   });
 
@@ -215,19 +215,19 @@ describe('/schedules/:scheduleId?edit=1', () => {
             })
             .end((err, res) => {
               Schedule.findByPk(scheduleId).then((s) => {
-                assert.strictEqual(s.scheduleName, 'テスト更新予定2');
-                assert.strictEqual(s.memo, 'テスト更新メモ2');
+                assert.deepStrictEqual(s.scheduleName, 'テスト更新予定2');
+                assert.deepStrictEqual(s.memo, 'テスト更新メモ2');
               });
               Candidate.findAll({
                 where: { scheduleId: scheduleId },
                 order: [['candidateId', 'ASC']],
               }).then((candidates) => {
-                assert.strictEqual(candidates.length, 2);
-                assert.strictEqual(
+                assert.deepStrictEqual(candidates.length, 2);
+                assert.deepStrictEqual(
                   candidates[0].candidateName,
                   'テスト更新候補1'
                 );
-                assert.strictEqual(
+                assert.deepStrictEqual(
                   candidates[1].candidateName,
                   'テスト更新候補2'
                 );

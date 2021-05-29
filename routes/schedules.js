@@ -85,7 +85,7 @@ router.get('/:scheduleId', authenticationEnsurer, (req, res, next) => {
       const userMap = new Map();  // key: userId, value: User
       userMap.set(parseInt(req.user.id), {
         isSelf: true,
-        uerId: parseInt(req.user.id),
+        userId: parseInt(req.user.id),
         username: req.user.username
       });
       availabilities.forEach((a) => {
@@ -108,7 +108,7 @@ router.get('/:scheduleId', authenticationEnsurer, (req, res, next) => {
       });
 
       // コメント取得
-      Comment.findAll({
+      return Comment.findAll({
         where: { scheduleId: storedSchedule.scheduleId }
       }).then((comments) => {
         const commentMap = new Map(); // key: userId, value: comment
