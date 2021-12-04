@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon -L ./bin/www",
-    "test": "npx jest --testTimeout=30000 --forceExit"
+    "test": "npx jest --testTimeout=10000 --forceExit"
   },
   "dependencies": {
     "bootstrap": "4.0.0",
