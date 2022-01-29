@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
-const router = express.Router();
+const Router = require('express-promise-router');
+const router = Router();
 const Schedule = require('../models/schedule');
 
 const dayjs = require('dayjs');

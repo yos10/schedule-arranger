@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
-const router = express.Router();
+const Router = require('express-promise-router');
+const router = Router();
 
 router.get('/', (req, res, next) => {
   req.logout();

@@ -10,23 +10,13 @@ var helmet = require('helmet');
 var session = require('express-session');
 var passport = require('passport');
 
-// モデルの読み込み
-var User = require('./models/user');
-var Schedule = require('./models/schedule');
-var Comment = require('./models/comment');
-var Candidate = require('./models/candidate');
-var Availability = require('./models/availability');
-User.sync().then(() => {
-  Schedule.belongsTo(User, { foreignKey: 'createdBy' });
-  Schedule.sync();
-  Comment.belongsTo(User, { foreignKey: 'userId' });
-  Comment.sync();
-  Availability.belongsTo(User, {foreignKey: 'userId'});
-  Candidate.sync().then(() => {
-    Availability.belongsTo(Candidate, { foreignKey: 'candidateId' });
-    Availability.sync();
-  });
-});
+const { sequelize } = require('./models/sequelize-loader');
+const { User, Schedule, Comment, Candidate, Availability } = require('./models');
+// sequelize.sync({ force: true }); テーブルを削除してからテーブルを作る
+// sequelize.sync({ alter: true }); テーブルの変更
+(async () => {
+  await sequelize.sync();
+})();
 
 var GitHubStrategy = require('passport-github2').Strategy;
 var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
