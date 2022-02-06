@@ -1,10 +1,14 @@
 version: '3'
 services:
   app:
-    build: .
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: dev
     tty: true
     ports:
       - 8000:8000
+    env_file: .env
     volumes:
       - .:/app
       - /app/node_modules
@@ -22,4 +26,5 @@ services:
       - schedule-arranger-data:/var/lib/postgresql/data
 volumes:
   schedule-arranger-data:
+    # 他のコンテナからこのボリュームを使用しない場合は external: true のオプションは不要
     external: true
