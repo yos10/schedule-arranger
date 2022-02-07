@@ -16,22 +16,22 @@ const Availability = require('./availability');
 //   });
 // });
 
-User.hasMany(Schedule);
+// User.hasMany(Schedule);
 Schedule.belongsTo(User, {
   foreignKey: 'createdBy'
 });
 
-User.hasMany(Comment);
+// User.hasMany(Comment);
 Comment.belongsTo(User, {
   foreignKey: 'userId'
 });
 
-User.hasMany(Availability);
+// User.hasMany(Availability);
 Availability.belongsTo(User, {
   foreignKey: 'userId'
 });
 
-Candidate.hasMany(Availability);
+// Candidate.hasMany(Availability);
 Availability.belongsTo(Candidate, {
   foreignKey: 'candidateId'
 });
